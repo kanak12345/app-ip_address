@@ -29,7 +29,6 @@ function getFirstIpAddress(cidrStr, callback) {
     limit: 1
   };
 
-    let address1= null;
   // Use the object's isValid() method to verify the passed CIDR.
   if (!cidr.isValid()) {
     // If the passed CIDR is invalid, set an error message.
@@ -38,23 +37,12 @@ function getFirstIpAddress(cidrStr, callback) {
     // If the passed CIDR is valid, call the object's toArray() method.
     // Notice the destructering assignment syntax to get the value of the first array's element.
     [firstIpAddress] = cidr.toArray(options);
-
   }
   // Call the passed callback function.
   // Node.js convention is to pass error data as the first argument to a callback.
   // The IAP convention is to pass returned data as the first argument and error
   // data as the second argument to the callback function.
-    let ipv6ip=null;
-if(firstIpAddress!=null){
-  ipv6ip=getIpv4MappedIpv6Address(firstIpAddress);
-}
-  let jsonString =  "{'ipv4':'"+firstIpAddress+"', 'ipv6' : '"+ipv6ip+"'}";//`  {IPv4: ${data} ipv6: ${mappedAddress}}`;
-
-  
-    let jsonval=JSON.stringify(jsonString);
-    
-  let jsonObj = JSON.parse(jsonval);
-  return callback(jsonObj, callbackError);
+  return callback(firstIpAddress, callbackError);
 }
 /**
  * Calculates an IPv4-mapped IPv6 address.
@@ -136,16 +124,6 @@ function main() {
     });
   }
   // Iterate over sampleIpv4s and pass the element's value to getIpv4MappedIpv6Address().
-  for (let i = 0; i < sampleIpv4sLen; i++) {
-    console.log(`\n--- Test Number ${i + 1} getIpv4MappedIpv6Address(${sampleIpv4s[i]}) ---`);
-    // Assign the function results to a variable so we can check if a string or null was returned.
-    let mappedAddress = getIpv4MappedIpv6Address(sampleIpv4s[i]);
-    if( mappedAddress ) {
-      console.log(`  IPv4 ${sampleIpv4s[i]} mapped to IPv6 Address: ${mappedAddress}`);
-    } else {
-      console.error(`  Problem converting IPv4 ${sampleIpv4s[i]} into a mapped IPv6 address.`);
-    }
-  }
   for (let i = 0; i < sampleIpv4sLen; i++) {
     console.log(`\n--- Test Number ${i + 1} getIpv4MappedIpv6Address(${sampleIpv4s[i]}) ---`);
     // Assign the function results to a variable so we can check if a string or null was returned.
